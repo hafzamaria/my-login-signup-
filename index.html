@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+
+    <div class="main">
+
+        <div class="start">
+    <h1>Signup Form</h1>
+    <p class="para">please fill in this form to create an account!</p>
+   </div>
+
+    <form onsubmit="signup(); return false ">
+        <div class="names">
+        <label for="firstName"></label>
+        <input type="text" id="firstName" placeholder="FirstName:" required>
+        <br>
+
+        <label for="lastName"></label>
+        <input type="text" id="lastName" placeholder="LastName:" required>
+        <br>
+      </div>
+        <label for="email"></label>
+        <input class="in1" type="email" id="email" placeholder="Email:" required>
+        <br>
+
+        <label for="password"></label>
+        <input class="in1" type="password" id="password" placeholder="Password:" required>
+        <br>
+
+        <label for="repeatPassword"></label>
+        <input class="in1" type="password" id="repeatPassword" placeholder="Confirm Password:" required>
+        <br>
+        <button class="but" type="submit">signup</button>
+      
+    </form>
+
+    <p id="message"></p>
+
+</div>
+<div class="link">
+    Already have an account?<a href="./login.html">Login here</a>
+    </div>
+    <br>
+    <br>
+
+<script>
+
+const signup=()=> {
+
+let firstName = document.querySelector('#firstName').value;
+let lastName = document.querySelector('#lastName').value;
+let email = document.querySelector('#email').value;
+let password = document.querySelector('#password').value;
+let repeatPassword = document.querySelector('#repeatPassword').value;
+
+
+if (password !== repeatPassword) {
+    document.querySelector("#message").innerHTML = 'Passwords do not match, please try again';
+    return;
+}
+
+axios.post('http://localhost:5000/signup', {
+
+    firstName,
+    lastName,
+    email,
+    password,
+
+})
+    .then(function (response) {
+        console.log(response.data);
+        document.querySelector("#message").innerHTML = response.data.message;
+    })
+    .catch(function (error) {
+        console.log(error.response.data);
+        document.querySelector("#message").innerHTML = error.response.data.message;
+    });
+}
+
+
+ 
+
+// function getAllUsers () {
+
+//   axios.get('http://localhost:5000/user')
+
+
+//   .then(function (response) {
+//     console.log(response.data);
+//     response.data.map(eachUser=>{
+//       document.querySelector("#allUsers").innerHTML +=
+//       `${eachUser.fullName}<br> ${eachYser.userName} <br> ${eachUser.password}`
+//     })
+   
+//   });
+  
+// }
+ 
+
+
+
+
+
+</script>
+
+
+
+
+</body>
+</html>
