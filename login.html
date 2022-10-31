@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1>Login Form</h1>
+    <form onsubmit="login(); return false ">
+       
+      
+        <label for="email"></label>
+        <input class="in1" type="email" id="email" placeholder="Email:" required>
+        <br>
+
+        <label for="password"></label>
+        <input class="in1" type="password" id="password" placeholder="Password:" required>
+        <br>
+
+        
+        <button class="but" type="submit">Login</button>
+      
+    </form>
+
+    <h1 id="message"></h1>
+    <div class="link">
+        Create a New Account?<a href="./index.html">SignUp here</a>
+        </div>
+    <!-- <script>
+
+        function login() {
+
+
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+
+            axios.post('http://localhost:5000/login', {
+      
+
+                email,
+                password,
+
+            })
+                .then(function (response) {
+                    console.log(response.data);
+                    document.querySelector("#message").innerHTML = response.data.message;
+                })
+
+                .catch(function (error) {
+                    console.log(error.response.data);
+                    document.querySelector("#message").innerHTML = error.response.data.message;
+                });
+        }
+
+    </script> -->
+    <script>
+
+        const login=()=> {
+        
+       
+        let email = document.querySelector('#email').value;
+        let password = document.querySelector('#password').value;
+       
+        
+      
+        
+        axios.post('http://localhost:5000/login', {
+        
+            email,
+            password,
+        
+        })
+            .then(function (response) {
+                console.log(response.data);
+                document.querySelector("#message").innerHTML = response.data.message;
+            })
+            .catch(function (error) {
+                console.log(error.response.data);
+                document.querySelector("#message").innerHTML = error.response.data.message;
+            });
+        }
+        
+        
+         
+        
+      
+         
+        
+        
+        
+        
+        
+        </script>
+
+
+
+</body>
+</html>

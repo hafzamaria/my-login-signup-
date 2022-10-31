@@ -56,53 +56,57 @@ app.post('/signup',(req , res)=>{
 
 })
 
+app.post("/login", (req, res) => {
 
+  let body = req.body;
 
-    app.post('/login',(req, res)=>{
+  if (!body.email || !body.password) {
+      res.status(400).send(
+          `required fields missing, request example: 
+              {
+                  "email": "abc@abc.com",
+                  "password": "12345"
+              }`
+      );
+      return;
+  }
 
-        let body = req.body;
+  let isFound = false; // https://stackoverflow.com/a/17402180/4378475
 
-        if(!body.email ||!body.passwor ){
-          res.status(400).send(
-            `required field missing:
-          {
-            "email":"abc@gmail.com",
-            "password":"12345"
-          }
-       `);
-       return;
-        }
-        let isFound = false;
-        for(let i =0; i<userBase.length; i++){
-        if(userBase[i].email === body.email){
-         isFound = true;
-            if(userBase[i].password === body.password){
-                res.status(200).send({
-                    firstName: userBase[i].firstName,
-                    lastName:userBase[i].lastName,
-                    email:userBase[i].email,
-                    message:'login successful'
-    
-                })
-                return;
-            
-            }else{
-              res.status(401).send({
-                message:'incorrect password'
+  for (let i = 0; i < userBase.length; i++) {
+      if (userBase[i].email === body.email) {
+
+          isFound = true;
+          if (userBase[i].password === body.password) { // correct password
+
+              res.status(200).send({
+                  firstName: userBase[i].firstName,
+                  lastName: userBase[i].lastName,
+                  email: userBase[i].email,
+                  message: "login successful",
+                  token: "some unique token"
               })
-
               return;
-            }
-          
-        }
-        }
-        if(!isFound){
-        res.status(404).send({
-            message:"user not found"
-        })
-        return;
-        }
-    })
+
+          } else { // password incorrect
+
+              res.status(401).send({
+                  message: "incorrect password"
+              })
+              return;
+          }
+      }
+  }
+
+  if (!isFound) {
+      res.status(404).send({
+          message: "user not found"
+      })
+      return;
+  }
+})
+
+   
 
 app.use(express.json()); app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
