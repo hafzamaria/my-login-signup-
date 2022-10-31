@@ -1,13 +1,24 @@
 import express from 'express';
 import cors from 'cors';
-import {nanoid} from 'nanoid'
+import mongoose from 'mongoose'
+
+
+ let dbURI ='mongodb+srv://abcd:abcd@cluster0.0nsp7aq.mongodb.net/mySocialMediaBase?retryWrites=true&w=majority';
+mongoose.connect(dbURI);
 
 const app = express();
 app.use (express.json());
 app.use ( cors());
 const port = process.env.PORT || 5000;
-//  console.log(nanoid());
-let userBase = [];
+
+const userSchema = new mongoose.Schema({
+    firstName:{type:String, required:true},
+    lastName:{type:String, required:true},
+    email:{type:String, required:true},
+    password:{type:String, required:true},
+    createdOn:{ type: Date, default: Date.now },
+  });
+const userModel = mongoose.model('User', userSchema);
 
 app.post('/signup',(req , res)=>{
 
@@ -28,31 +39,26 @@ app.post('/signup',(req , res)=>{
    `);
    return;
     }
-    let isFound =false;
-    for(let i=0; i<userBase.length; i++){
-      if(userBase[i].email === body.email.toLowerCase()){
-         isFound= true;
-         break;
-      }
-    }
-    if(isFound){
-    res.status(400).send({
-        message:`email: "${body.email}" already exist`
-    });
-        return;
-    }
-   
 
-
-    let newUser ={
-        userId : nanoid(),
+    let newUser =userModel({
+    
         firstName:body.firstName,
         lastName:body.lastName,
         email:body.email.toLowerCase(),
         password:body.password
-    }
-    userBase.push(newUser);
-    res.status(201).send({message:'user is created'})
+    })
+    newUser.save((err,result)=>{
+        if(!err){
+            console.log('data saved:',result)
+            res.status(201).send({message:'user is created'})
+        }else{
+            console.log('db error:',err)
+            res.status(500).send({message:'internal server error'})
+        }
+
+    })
+   
+   
 
 })
 
@@ -111,3 +117,28 @@ app.post("/login", (req, res) => {
 app.use(express.json()); app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
+////////////////mongodb connected disconnected events///////////////////////////////////////////////
+mongoose.connection.on('connected', function () { //connected
+    console.log("mongoose connected");
+});
+
+mongoose.connection.on('disconnected', function () {//disconnected
+    console.log("Mongoose is disconnected");
+    process.exit(1);
+});
+
+mongoose.connection.on('error', function (err) {//any error
+    console.log('Mongoose connection error: ', err);
+    process.exit(1);
+});
+
+
+process.on('SIGINT', function () {/////this function will run jst before app is closing
+    console.log("app is terminating");
+    mongoose.connection.close(function () {
+        console.log('Mongoose default connection closed');
+        process.exit(0);
+    });
+});
+
+//////////////////////////////////////
