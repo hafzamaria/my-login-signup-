@@ -11,7 +11,7 @@ app.use (express.json());
 app.use ( cors());
 const port = process.env.PORT || 5000;
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({ ///from mongoose
     firstName:{type:String, required:true},
     lastName:{type:String, required:true},
     email:{type:String, required:true},
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   });
 const userModel = mongoose.model('User', userSchema);
 
-app.post('/signup',(req , res)=>{
+app.post('/signup',(req , res)=>{////from expres.js
 
     let body = req.body;
 
@@ -49,8 +49,8 @@ app.post('/signup',(req , res)=>{
     })
     newUser.save((err,result)=>{
         if(!err){
-            console.log('data saved:',result)
-            res.status(201).send({message:'user is created'})
+            console.log("data saved:",result)
+            res.status(201).send({message:'user is created'});
         }else{
             console.log('db error:',err)
             res.status(500).send({message:'internal server error'})
